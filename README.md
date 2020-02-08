@@ -61,13 +61,13 @@ Our speakers have several criteria for travel. For example, they are suitable fo
 
 Related to this case, our mission is to **report flights and hotels that match the criteria and declared weather conditions by composing Observables.**
 
-##Requirements
+## Requirements
 
 1. Bring your laptop
 
 2. Install `JDK 8` or later by your computer. 
 
-3. Because the `UtilityForJavaDay` module uses `Elasticsearch` you must have a running `Elasticsearch Server`. You can download current Elasticsrarch version here https://www.elastic.co/downloads/elasticsearch In other option is `Docker`.  The following command starts the Elasticsearch server with Docker. 
+3. Because the `UtilityForJavaDay` module uses `Elasticsearch` you must have a running `Elasticsearch Server`. You can download current Elasticsrarch version here https://www.elastic.co/downloads/elasticsearch In other option is `Docker`.  The following command starts the `Elasticsearch Server` with `Docker`. 
 
 ```shell script
 docker run -d --rm --name elasticsearch \ 
@@ -77,3 +77,6 @@ docker run -d --rm --name elasticsearch \
 elasticsearch:7.5.2
 ```
 
+## Solutions
+
+The solutions of the missions will be pushed solutions branch on the workshop day.
