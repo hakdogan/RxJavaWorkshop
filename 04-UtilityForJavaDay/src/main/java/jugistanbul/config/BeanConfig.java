@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializer;
 import org.apache.http.HttpHost;
+import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
 import org.elasticsearch.action.support.master.AcknowledgedResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestClient;
@@ -31,8 +32,7 @@ import java.time.ZonedDateTime;
  **/
 
 @Component
-public class BeanConfig
-{
+public class BeanConfig {
 
     private static final String INDEX_NAME = "speaker";
     private final Logger logger = LoggerFactory.getLogger(BeanConfig.class);
@@ -43,89 +43,100 @@ public class BeanConfig
     }
 
     @Bean
-    public Gson getGsonInstance(){
+    public Gson getGsonInstance() {
         return new GsonBuilder().registerTypeAdapter(LocalDateTime.class, (JsonDeserializer<LocalDateTime>) (json, type, jsonDeserializationContext) ->
                 ZonedDateTime.parse(json.getAsJsonPrimitive().getAsString()).toLocalDateTime()).create();
     }
 
     @Bean(destroyMethod = "close")
     @Qualifier("RestHighLevelClient")
-    public RestHighLevelClient getClient(){
-            final RestHighLevelClient
-                    client = new RestHighLevelClient(RestClient
-                    .builder(new HttpHost("localhost", 9200, "http")));
+    public RestHighLevelClient getClient() {
+        final RestHighLevelClient
+                client = new RestHighLevelClient(RestClient
+                .builder(new HttpHost("localhost", 9200, "http")));
 
-            createIndexIfNotExist(client);
-            return client;
+        createIndexIfNotExist(client);
+        return client;
     }
 
-    public void createIndexIfNotExist(final RestHighLevelClient client){
+    public void createIndexIfNotExist(final RestHighLevelClient client) {
 
         try {
 
             final GetIndexRequest request = new GetIndexRequest(INDEX_NAME);
-            boolean exists = client.indices().exists(request, RequestOptions.DEFAULT);
+            final boolean exists = client.indices().exists(request, RequestOptions.DEFAULT);
 
-            if(!exists){
+            if (exists) {
+                DeleteIndexRequest deleteIndexRequest = new DeleteIndexRequest(INDEX_NAME);
+                AcknowledgedResponse deleteIndexResponse = client.indices().delete(deleteIndexRequest, RequestOptions.DEFAULT);
+            }
 
-                final CreateIndexRequest indexRequest = new CreateIndexRequest(INDEX_NAME);
-                indexRequest.settings(Settings.builder()
-                        .put("index.number_of_shards", 2)
-                        .put("index.number_of_replicas", 1)
-                );
+            final CreateIndexRequest indexRequest = new CreateIndexRequest(INDEX_NAME);
+            indexRequest.settings(Settings.builder()
+                    .put("index.number_of_shards", 2)
+                    .put("index.number_of_replicas", 1)
+            );
 
-                final CreateIndexResponse createIndexResponse = client.indices().create(indexRequest, RequestOptions.DEFAULT);
-                if(createIndexResponse.isAcknowledged() && createIndexResponse.isShardsAcknowledged()){
-                    logger.info("{} endeksi basariyla olusturuldu", INDEX_NAME);
-                } else {
-                    logger.debug("{} endeksi olusturulamadi", INDEX_NAME);
-                }
+            final CreateIndexResponse createIndexResponse = client.indices().create(indexRequest, RequestOptions.DEFAULT);
+            if (createIndexResponse.isAcknowledged() && createIndexResponse.isShardsAcknowledged()) {
+                logger.info("{} index created successfully", INDEX_NAME);
+            } else {
+                logger.debug("Failed to create {} index", INDEX_NAME);
+            }
 
-                final PutMappingRequest mappingRequest = new PutMappingRequest(INDEX_NAME);
-                XContentBuilder builder = XContentFactory.jsonBuilder();
-                builder.startObject();
+            final PutMappingRequest mappingRequest = new PutMappingRequest(INDEX_NAME);
+            final XContentBuilder builder = XContentFactory.jsonBuilder();
+            builder.startObject();
+            {
+                builder.startObject("properties");
                 {
-                    builder.startObject("properties");
+                    builder.startObject("name");
                     {
-                        builder.startObject("name");
-                        {builder.field("type", "text");}
-                        builder.endObject();
-
-                        builder.startObject("title");
-                        {builder.field("type", "text");}
-                        builder.endObject();
-
-                        builder.startObject("approve");
-                        {builder.field("type", "boolean");}
-                        builder.endObject();
-
-                        builder.startObject("retracted");
-                        {builder.field("type", "boolean");}
-                        builder.endObject();
-
-                        builder.startObject("mail");
-                        {builder.field("type", "text");}
-                        builder.endObject();
-
-                        builder.startObject("updateTime");
                         builder.field("type", "text");
-                        builder.endObject();
                     }
+                    builder.endObject();
+
+                    builder.startObject("title");
+                    {
+                        builder.field("type", "text");
+                    }
+                    builder.endObject();
+
+                    builder.startObject("approve");
+                    {
+                        builder.field("type", "boolean");
+                    }
+                    builder.endObject();
+
+                    builder.startObject("retracted");
+                    {
+                        builder.field("type", "boolean");
+                    }
+                    builder.endObject();
+
+                    builder.startObject("mail");
+                    {
+                        builder.field("type", "text");
+                    }
+                    builder.endObject();
+
+                    builder.startObject("updateTime");
+                    builder.field("type", "text");
                     builder.endObject();
                 }
                 builder.endObject();
-                mappingRequest.source(builder);
-                final AcknowledgedResponse putMappingResponse = client.indices().putMapping(mappingRequest, RequestOptions.DEFAULT);
+            }
+            builder.endObject();
+            mappingRequest.source(builder);
+            final AcknowledgedResponse putMappingResponse = client.indices().putMapping(mappingRequest, RequestOptions.DEFAULT);
 
-                if(putMappingResponse.isAcknowledged()){
-                    logger.info("Mapping of {} was successfully created", INDEX_NAME);
-                } else {
-                    logger.debug("Creating mapping of {} failed", INDEX_NAME);
-                }
-
+            if (putMappingResponse.isAcknowledged()) {
+                logger.info("Mapping of {} was successfully created", INDEX_NAME);
+            } else {
+                logger.debug("Creating mapping of {} failed", INDEX_NAME);
             }
 
-        } catch (IOException e){
+        } catch (IOException e) {
             logger.error("An exception was thrown ", e);
         }
     }
