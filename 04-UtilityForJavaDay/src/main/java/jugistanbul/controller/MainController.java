@@ -75,7 +75,7 @@ public class MainController
                         return Stream.empty();
                     } catch (Exception e) {
                         Speaker speaker = pair.getLeft();
-                        logger.warn("Failed to send {}", speaker, e);
+                        logger.warn("Failed to send {}", speaker.getMail(), e);
                         return Stream.of(speaker);
                     }
                 })
