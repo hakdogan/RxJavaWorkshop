@@ -68,7 +68,7 @@ public class BeanConfig {
 
             if (exists) {
                 DeleteIndexRequest deleteIndexRequest = new DeleteIndexRequest(INDEX_NAME);
-                AcknowledgedResponse deleteIndexResponse = client.indices().delete(deleteIndexRequest, RequestOptions.DEFAULT);
+                client.indices().delete(deleteIndexRequest, RequestOptions.DEFAULT);
             }
 
             final CreateIndexRequest indexRequest = new CreateIndexRequest(INDEX_NAME);
