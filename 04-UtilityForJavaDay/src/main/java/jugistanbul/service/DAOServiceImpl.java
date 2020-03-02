@@ -40,7 +40,7 @@ public class DAOServiceImpl implements DAOService
     private static final String UPDATE_SPEAKER  = "update speaker set name='%s', title='%s', " +
             "approve=%s, retracted=%s, mail='%s', updateTime='%s' where id=%d";
     private static final String ALL_CHANGE_DATA = "select * from speaker where updateTime > timestamp '%s'";
-    private static final String ALL_PASSENGERS = "select * from travelassistance";
+    private static final String ALL_PASSENGERS = "select * from passengers";
 
     private final JdbcTemplate jdbcTemplate;
     private final RestHighLevelClient client;
