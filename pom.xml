@@ -13,7 +13,8 @@
         <module>01-FactoryMethods</module>
         <module>02-TypesOfObservables</module>
         <module>03-Operators</module>
-        <module>04-UtilityForJavaDay</module>
+        <module>05-UtilityForJavaDay</module>
+        <module>04-ErrorHandling</module>
     </modules>
 
     <properties>
