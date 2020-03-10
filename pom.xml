@@ -15,6 +15,7 @@
         <module>03-Operators</module>
         <module>05-UtilityForJavaDay</module>
         <module>04-ErrorHandling</module>
+        <module>06-Backpressure</module>
     </modules>
 
     <properties>
@@ -36,16 +37,6 @@
             <groupId>io.reactivex.rxjava2</groupId>
             <artifactId>rxjava</artifactId>
             <version>${rxJava.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpclient</artifactId>
-            <version>4.5.10</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpasyncclient</artifactId>
-            <version>4.1.4</version>
         </dependency>
     </dependencies>
     <build>
