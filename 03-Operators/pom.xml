@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>03-Operators</artifactId>
+    <artifactId>operators</artifactId>
 
 
 </project>
