@@ -1,6 +1,6 @@
 # Rx Java Workshop
 
-This repository has some use cases related to `Rx Java` and three missions for the workshop.
+This repository has some use cases related to `RxJava` and four missions for the workshop.
 
 `FactoryMethods` module has factory methods that are commonly used for creating Observable. 
 
