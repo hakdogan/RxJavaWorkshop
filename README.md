@@ -8,14 +8,18 @@ This repository has some use cases related to `Rx Java` and three missions for t
 
 `Operators` module has some operators with use cases.
 
-`UtilityForJavaDay` module has an application that builds with Spring Boot. The application offers a variety of services for speakers of `Java Day İstanbul`. For example, mailing, notifications about cheap flight and hotel information, etc. Our missions will be related to this application.
+`ErrorHandling` module has some error handling operators with use cases.
+
+`UtilityForJavaDay` module has an application that builds with Spring Boot. The application offers a variety of services for speakers of `Java Day İstanbul`. For example, mailing, notifications about cheap flight and hotel information, etc. Our missions, except one, will be related to this application.
+
+`Backpressure` module has some examples of backpressure handling. One of our missions will be related to this module.
 
 ## Missions
 
-In this workshop, we have three missions.
+In this workshop, we have four missions.
 
 ### Mission 1
-In the application, we use `Elasticsearch` as a cache. Therefore, we have a `scheduler` that responsible for keeping `Elasticsearch` synchronized with the database.
+In the Spring Boot application, we use `Elasticsearch` as a cache. Therefore, we have a `scheduler` that responsible for keeping `Elasticsearch` synchronized with the database.
 
 ```java
 final List<Speaker> speakers = daoService.findAllChangeSpeakersByTime(lastQueryTime);
@@ -60,6 +64,13 @@ Related to this case, our mission is to **use Observable instead of Future.**
 Our speakers have several criteria for travel. For example, they are suitable for travel only certain days, some prefer to travel in sunny weather they also have limits for flight and accommodation costs, etc. We have three streams each is independent of the other they are `weather`, `flight`, and `hotel`. 
 
 Related to this case, our mission is to **report flights and hotels that match the criteria and declared weather conditions by composing Observables.**
+
+### Mission 4
+
+We have an HTTP server and it's under load so we care about logging every request without bad affecting response time.
+
+Related to this case, our mission is to **create a Flowable that uses backpressure for HTTP requests and log each request.**
+
 
 ## Requirements
 
